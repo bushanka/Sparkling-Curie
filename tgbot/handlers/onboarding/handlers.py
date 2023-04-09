@@ -5,7 +5,7 @@ from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
 from tgbot.handlers.onboarding import static_text
-from tgbot.handlers.utils.info import extract_user_data_from_update
+from tgbot.handlers.utils.info import extract_user_data_from_update, extract_user_message_from_update
 from users.models import User
 from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_command
 
@@ -37,3 +37,26 @@ def secret_level(update: Update, context: CallbackContext) -> None:
         message_id=update.callback_query.message.message_id,
         parse_mode=ParseMode.HTML
     )
+
+
+def gpt_answer(update: Update, context: CallbackContext) -> None:
+   message = extract_user_message_from_update(update)['message']
+   update.message.reply_text(text=message)
+
+   headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + os.getenv('OPENAI_API_KEY', ''),
+   }
+
+   json_data = {
+       'model': 'gpt-3.5-turbo',
+       'messages': [
+           {
+               'role': 'user',
+               'content': 'Say this is a test!',
+           },
+       ],
+       'temperature': 0.7,
+   }
+
+  # response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=json_data)

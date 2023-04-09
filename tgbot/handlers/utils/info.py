@@ -31,3 +31,9 @@ def extract_user_data_from_update(update: Update) -> Dict:
             if k in user and user[k] is not None
         },
     )
+
+def extract_user_message_from_update(update: Update) -> Dict:
+   message = update.effective_message.to_dict()
+   return dict(
+      message=message['message']
+   )
