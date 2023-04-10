@@ -1,6 +1,7 @@
 import datetime
 
 from django.utils import timezone
+import requests
 from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
@@ -43,7 +44,7 @@ def secret_level(update: Update, context: CallbackContext) -> None:
 
 def gpt_answer(update: Update, context: CallbackContext) -> None:
    message = extract_user_message_from_update(update)['message']
-   update.message.reply_text(text=message)
+   update.message.reply_text(text='Подождите...')
 
    headers = {
     'Content-Type': 'application/json',
@@ -55,10 +56,10 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
        'messages': [
            {
                'role': 'user',
-               'content': 'Say this is a test!',
+               'content': f'{message}',
            },
        ],
        'temperature': 0.7,
    }
-
-  # response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=json_data)
+   response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=json_data)
+   update.message.reply_text(text=response)
