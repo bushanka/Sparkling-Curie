@@ -35,5 +35,5 @@ def extract_user_data_from_update(update: Update) -> Dict:
 def extract_user_message_from_update(update: Update) -> Dict:
    message = update.effective_message.to_dict()
    return dict(
-      message=message['message']
+      message=message['text']
    )
