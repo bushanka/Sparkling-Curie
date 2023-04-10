@@ -62,4 +62,4 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
        'temperature': 0.7,
    }
    response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=json_data)
-   update.message.reply_text(text=response)
+   update.message.reply_text(text=str(response))
