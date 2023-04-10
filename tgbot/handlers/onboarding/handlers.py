@@ -9,6 +9,8 @@ from tgbot.handlers.utils.info import extract_user_data_from_update, extract_use
 from users.models import User
 from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_command
 
+import os
+
 
 def command_start(update: Update, context: CallbackContext) -> None:
     u, created = User.get_user_and_created(update, context)

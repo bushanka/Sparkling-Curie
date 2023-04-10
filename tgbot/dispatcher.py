@@ -27,6 +27,9 @@ def setup_dispatcher(dp):
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
 
+    #gpt_answer
+    dp.add_handler(MessageHandler(Filters.text, onboarding_handlers.gpt_answer))
+
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
