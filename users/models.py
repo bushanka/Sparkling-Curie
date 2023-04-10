@@ -74,6 +74,16 @@ class User(CreateUpdateTracker):
         return f"{self.first_name} {self.last_name}" if self.last_name else f"{self.first_name}"
 
 
+class UserPrompt(CreateTracker):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_prompt = models.JSONField()
+
+    objects = GetOrNoneManager()
+
+    def __str__(self):
+        return f"user: {self.user}, user prompt: {self.user_prompt}"
+
+
 class Location(CreateTracker):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     latitude = models.FloatField()

@@ -16,6 +16,7 @@ from tgbot.handlers.utils import files, error
 from tgbot.handlers.admin import handlers as admin_handlers
 from tgbot.handlers.location import handlers as location_handlers
 from tgbot.handlers.onboarding import handlers as onboarding_handlers
+from tgbot.handlers.user_prompt import handlers as user_prompt_handlers
 from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.main import bot
 
@@ -28,7 +29,8 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
 
     #gpt_answer
-    dp.add_handler(MessageHandler(Filters.text, onboarding_handlers.gpt_answer))
+    dp.add_handler(MessageHandler(Filters.text, user_prompt_handlers.gpt_answer))
+    dp.add_handler(CommandHandler('delete_context', admin_handlers.export_users))
 
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))

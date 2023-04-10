@@ -1,7 +1,6 @@
 import datetime
 
 from django.utils import timezone
-import requests
 from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
@@ -10,7 +9,6 @@ from tgbot.handlers.utils.info import extract_user_data_from_update, extract_use
 from users.models import User
 from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_command
 
-import os
 
 
 def command_start(update: Update, context: CallbackContext) -> None:
@@ -40,27 +38,3 @@ def secret_level(update: Update, context: CallbackContext) -> None:
         message_id=update.callback_query.message.message_id,
         parse_mode=ParseMode.HTML
     )
-
-
-def gpt_answer(update: Update, context: CallbackContext) -> None:
-   message = extract_user_message_from_update(update)['message']
-   update.message.reply_text(text='Подождите...')
-
-   headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + os.getenv('OPENAI_API_KEY', ''),
-   }
-
-   json_data = {
-       'model': 'gpt-3.5-turbo',
-       'messages': [
-           {
-               'role': 'user',
-               'content': f'{message}',
-           },
-       ],
-       'temperature': 0.7,
-   }
-   response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=json_data)
-   message_answer = response.json()['choices'][0]['message']['content']
-   update.message.reply_text(text=message_answer)
