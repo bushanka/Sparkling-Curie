@@ -1,6 +1,5 @@
 import requests
 import os
-import json
 
 from telegram import Update
 from telegram.ext import CallbackContext
@@ -17,29 +16,17 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text=wait_message)
 
     user_prompt_object, create = UserPrompt.objects.get_or_create(user=u)
+    user_prompt_object = UserPrompt.objects.filter(user=u).first()
+    
+    prev_prompt = user_prompt_object.user_prompt
+    user_prompt_object.user_prompt = prev_prompt.append(
+          {
+          'role': 'user',
+          'content': f'{message}'
+          }
+    )
 
-    if not create:
-        user_prompt_object.user_prompt = json.dumps(
-            [
-                {
-                    'role': 'user',
-                    'content': f'{message}'
-                }
-            ]
-        )
-        user_prompt_object.save()
-    else:
-        user_prompt_object = UserPrompt.objects.filter(user=u).first()
-        prev_prompt = json.loads(user_prompt_object.user_prompt)
-        user_prompt_object.user_prompt = json.dumps(
-            prev_prompt.append(
-                {
-                    'role': 'user',
-                    'content': f'{message}'
-                }
-            )
-        )
-        user_prompt_object.save()
+    user_prompt_object.save()
 
     headers = {
         'Content-Type': 'application/json',
@@ -48,7 +35,7 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
 
     json_data = {
         'model': 'gpt-3.5-turbo',
-        'messages': json.loads(user_prompt_object.user_prompt),
+        'messages': user_prompt_object.user_prompt,
         'temperature': 0.7,
     }
     
@@ -56,9 +43,7 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
     message_answer = response.json()['choices'][0]['message']['content']
     update.message.reply_text(text=message_answer)
 
-    prev_prompt = json.loads(user_prompt_object.user_prompt)
-    user_prompt_object.user_prompt = json.dumps(
-        prev_prompt.append(response.json()['choices'][0]['message'])
-    )
+    prev_prompt = user_prompt_object.user_prompt
+    user_prompt_object.user_prompt = prev_prompt.append(response.json()['choices'][0]['message'])
     user_prompt_object.save()
     
