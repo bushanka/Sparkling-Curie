@@ -17,7 +17,7 @@ def delete_context(update: Update, context: CallbackContext) -> None:
     except UserPrompt.DoesNotExist:
         update.message.reply_text(text=context_already_deleted)
 
-
+# 123
 def gpt_answer(update: Update, context: CallbackContext) -> None:
     u = User.get_user(update, context)
 
