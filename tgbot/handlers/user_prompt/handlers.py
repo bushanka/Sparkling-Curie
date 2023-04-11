@@ -19,6 +19,9 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
     user_prompt_object = UserPrompt.objects.filter(user=u).first()
     
     prev_prompt = user_prompt_object.user_prompt
+    if prev_prompt is None:
+        prev_prompt = []
+
     user_prompt_object.user_prompt = prev_prompt.append(
           {
           'role': 'user',
