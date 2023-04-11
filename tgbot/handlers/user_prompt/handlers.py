@@ -16,7 +16,7 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
     message = extract_user_message_from_update(update)['message']
     update.message.reply_text(text=wait_message)
 
-    user_prompt_object, create = UserPrompt.objects.get_or_create(user=u, message=message)
+    user_prompt_object, create = UserPrompt.objects.get_or_create(user=u)
 
     if not create:
         user_prompt_object.user_prompt = json.dumps(
