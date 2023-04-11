@@ -7,6 +7,7 @@ from dtb.settings import DEBUG
 from users.models import Location
 from users.models import User
 from users.forms import BroadcastForm
+from users.models import UserPrompt
 
 from users.tasks import broadcast_message
 from tgbot.handlers.broadcast_message.utils import send_one_message
@@ -52,3 +53,8 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ['id', 'user_id', 'created_at']
+
+
+@admin.register(UserPrompt)
+class UserPromptAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'created_at', 'user_prompt']

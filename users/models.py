@@ -78,7 +78,7 @@ class User(CreateUpdateTracker):
 
 class UserPrompt(CreateTracker):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_prompt = models.JSONField(default=json.dumps([]))
+    user_prompt = models.JSONField(default=list)
 
     objects = GetOrNoneManager()
 
