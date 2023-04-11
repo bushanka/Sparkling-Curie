@@ -10,6 +10,8 @@ from telegram.ext import CallbackContext
 from tgbot.handlers.utils.info import extract_user_data_from_update
 from utils.models import CreateUpdateTracker, nb, CreateTracker, GetOrNoneManager
 
+import json
+
 
 class AdminUserManager(Manager):
     def get_queryset(self):
@@ -76,7 +78,7 @@ class User(CreateUpdateTracker):
 
 class UserPrompt(CreateTracker):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_prompt = models.JSONField()
+    user_prompt = models.JSONField(default=json.dumps([]))
 
     objects = GetOrNoneManager()
 
