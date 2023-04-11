@@ -6,7 +6,6 @@ from telegram.ext import CallbackContext
 
 from tgbot.handlers.user_prompt.static_text import wait_message, smth_goes_wrong, context_already_deleted, context_deleted
 from tgbot.handlers.utils.info import extract_user_message_from_update
-from django.core.exceptions import ObjectDoesNotExist
 from users.models import User, UserPrompt
 
 

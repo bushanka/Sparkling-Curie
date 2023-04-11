@@ -28,10 +28,6 @@ def setup_dispatcher(dp):
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
 
-    #gpt_answer
-    dp.add_handler(MessageHandler(Filters.text, user_prompt_handlers.gpt_answer))
-    dp.add_handler(CommandHandler('delete_context', user_prompt_handlers.delete_context))
-
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
@@ -40,6 +36,10 @@ def setup_dispatcher(dp):
     # location
     dp.add_handler(CommandHandler("ask_location", location_handlers.ask_for_location))
     dp.add_handler(MessageHandler(Filters.location, location_handlers.location_handler))
+
+    #gpt_answer
+    dp.add_handler(CommandHandler('delete_context', user_prompt_handlers.delete_context))
+    dp.add_handler(MessageHandler(Filters.text, user_prompt_handlers.gpt_answer))
 
     # secret level
     dp.add_handler(CallbackQueryHandler(onboarding_handlers.secret_level, pattern=f"^{SECRET_LEVEL_BUTTON}"))
@@ -53,9 +53,9 @@ def setup_dispatcher(dp):
     )
 
     # files
-    dp.add_handler(MessageHandler(
-        Filters.animation, files.show_file_id,
-    ))
+    # dp.add_handler(MessageHandler(
+    #     Filters.animation, files.show_file_id,
+    # ))
 
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)
