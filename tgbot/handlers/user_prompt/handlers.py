@@ -26,6 +26,8 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
           }
     )
 
+    print(user_prompt_object.user_prompt)
+
     user_prompt_object.save()
 
     headers = {
