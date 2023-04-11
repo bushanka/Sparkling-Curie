@@ -18,14 +18,11 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
 
     user_prompt_object, create = UserPrompt.objects.get_or_create(user=u)
     user_prompt_object = UserPrompt.objects.filter(user=u).first()
+
     print(user_prompt_object.user_prompt)
     print(type(user_prompt_object.user_prompt))
-    
-    prev_prompt = user_prompt_object.user_prompt
-    if prev_prompt is None:
-        prev_prompt = []
 
-    user_prompt_object.user_prompt = prev_prompt.append(
+    user_prompt_object.user_prompt.append(
           {
           'role': 'user',
           'content': f'{message}'
@@ -49,7 +46,6 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
     message_answer = response.json()['choices'][0]['message']['content']
     update.message.reply_text(text=message_answer)
 
-    prev_prompt = user_prompt_object.user_prompt
-    user_prompt_object.user_prompt = prev_prompt.append(response.json()['choices'][0]['message'])
+    user_prompt_object.user_prompt.append(response.json()['choices'][0]['message'])
     user_prompt_object.save()
     
