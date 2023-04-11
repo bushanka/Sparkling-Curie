@@ -6,6 +6,7 @@ from telegram.ext import CallbackContext
 
 from tgbot.handlers.user_prompt.static_text import wait_message
 from tgbot.handlers.utils.info import extract_user_message_from_update
+from django.core.exceptions import ObjectDoesNotExist
 from users.models import User, UserPrompt
 
 
@@ -17,6 +18,7 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
 
     user_prompt_object, create = UserPrompt.objects.get_or_create(user=u)
     user_prompt_object = UserPrompt.objects.filter(user=u).first()
+    print(user_prompt_object)
     
     prev_prompt = user_prompt_object.user_prompt
     if prev_prompt is None:
