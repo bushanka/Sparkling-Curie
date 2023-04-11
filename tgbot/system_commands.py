@@ -33,6 +33,7 @@ def set_up_commands(bot_instance: Bot) -> None:
             "export_users": 'Exporter users.csv 👥',
         },
         'ru': {
+            'delete_context': 'Удалить контекст',
             'start': 'Запустить django бота 🚀',
             'stats': 'Статистика бота 📊',
             'admin': 'Показать информацию для админов ℹ️',

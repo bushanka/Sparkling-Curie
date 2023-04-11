@@ -4,10 +4,19 @@ import os
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from tgbot.handlers.user_prompt.static_text import wait_message
+from tgbot.handlers.user_prompt.static_text import wait_message, smth_goes_wrong, context_already_deleted, context_deleted
 from tgbot.handlers.utils.info import extract_user_message_from_update
 from django.core.exceptions import ObjectDoesNotExist
 from users.models import User, UserPrompt
+
+
+def delete_context(update: Update, context: CallbackContext) -> None:
+    u = User.get_user(update, context)
+    try:
+        UserPrompt.filter(user=u).update(user_prompt=[])
+        update.message.reply_text(text=context_deleted)
+    except UserPrompt.DoesNotExist:
+        update.message.reply_text(text=context_already_deleted)
 
 
 def gpt_answer(update: Update, context: CallbackContext) -> None:
@@ -19,8 +28,6 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
     user_prompt_object, create = UserPrompt.objects.get_or_create(user=u)
     user_prompt_object = UserPrompt.objects.filter(user=u).first()
 
-    print(user_prompt_object.user_prompt)
-    print(type(user_prompt_object.user_prompt))
 
     user_prompt_object.user_prompt.append(
           {
@@ -43,7 +50,12 @@ def gpt_answer(update: Update, context: CallbackContext) -> None:
     }
     
     response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=json_data)
-    message_answer = response.json()['choices'][0]['message']['content']
+    try:
+        message_answer = response.json()['choices'][0]['message']['content']
+    except KeyError:
+        print(response.json())
+        message_answer = smth_goes_wrong
+
     update.message.reply_text(text=message_answer)
 
     user_prompt_object.user_prompt.append(response.json()['choices'][0]['message'])

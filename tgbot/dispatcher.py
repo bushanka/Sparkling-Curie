@@ -30,7 +30,7 @@ def setup_dispatcher(dp):
 
     #gpt_answer
     dp.add_handler(MessageHandler(Filters.text, user_prompt_handlers.gpt_answer))
-    dp.add_handler(CommandHandler('delete_context', admin_handlers.export_users))
+    dp.add_handler(CommandHandler('delete_context', user_prompt_handlers.delete_context))
 
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
