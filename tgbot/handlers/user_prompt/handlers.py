@@ -12,7 +12,7 @@ from users.models import User, UserPrompt
 def delete_context(update: Update, context: CallbackContext) -> None:
     u = User.get_user(update, context)
     try:
-        UserPrompt.filter(user=u).update(user_prompt=[])
+        UserPrompt.objects.filter(user=u).update(user_prompt=[])
         update.message.reply_text(text=context_deleted)
     except UserPrompt.DoesNotExist:
         update.message.reply_text(text=context_already_deleted)
